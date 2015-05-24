@@ -1,4 +1,7 @@
-﻿var o_nominatim_results;
+﻿var lat_o, lon_o;
+var lat_t, lon_t;
+
+var o_nominatim_results;
 var o_overpass_results;
 
 function o_loadNominatimResults() {
@@ -11,7 +14,11 @@ function o_loadNominatimResults() {
 
                 var result = '';
                 for (i=0; i < o_nominatim_results.length; i++) {
-                    result = result + '<p><button onclick="o_loadOverpassResults(' + i + ')">Select</button> ' + o_nominatim_results[i].getAttribute('display_name') + '</p>';
+                    if (o_nominatim_results[i].getAttribute('osm_type') == 'node') {
+                    result = result + '<p><button onclick="o_loadOverpassResults(' + i + ')">Select</button> <acronym title="Will be used direct as route start/finish without searching entrances" style="border-bottom: 1px dashed black;color:#ff0000">node</acronym> ' + o_nominatim_results[i].getAttribute('display_name') + '</p>';
+                    } else {
+                        result = result + '<p><button onclick="o_loadOverpassResults(' + i + ')">Select</button> ' + o_nominatim_results[i].getAttribute('display_name') + '</p>';
+                    }
                 }
 
 //                alert(xmlhttp.responseText);
@@ -28,6 +35,11 @@ function o_loadNominatimResults() {
 function o_loadOverpassResults(i) {
     document.getElementById("o_nominatim_results").innerHTML = o_nominatim_results[i].getAttribute('display_name');
 //    alert(nominatim_results[i].getAttribute('osm_type') + '(' + nominatim_results[i].getAttribute('osm_id') + ')');
+
+    if (o_nominatim_results[i].getAttribute('osm_type') == 'node') {
+        setLatLonOne(o_nominatim_results[i].getAttribute('lat'), o_nominatim_results[i].getAttribute('lon'));
+        document.getElementById("node_one").innerHTML = 'Start: ' + o_nominatim_results[i].getAttribute('lat') + ',' + o_nominatim_results[i].getAttribute('lon');
+    } else {
 
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
@@ -55,11 +67,13 @@ function o_loadOverpassResults(i) {
     var request = 'http://overpass-api.de/api/interpreter?data=' + o_nominatim_results[i].getAttribute('osm_type') + '(' + o_nominatim_results[i].getAttribute('osm_id') + ');%20%3E%20-%3E%20.a;%20node.a[entrance];%20out%20body%20qt;';
     xmlhttp.open('GET', request, true);
     xmlhttp.send();
+    }
 }
 
-function o_setSelectedNode(number) {
-        setLatLonOne(o_overpass_results[number].getAttribute('lat'), o_overpass_results[number].getAttribute('lon'));
-        document.getElementById("node_one").innerHTML = o_overpass_results[number].getAttribute('lat') + ',' + o_overpass_results[number].getAttribute('lon');
+function o_setSelectedNode(i) {
+    lat_o = o_overpass_results[i].getAttribute('lat');
+    lon_o = o_overpass_results[i].getAttribute('lon');
+    document.getElementById("node_one").innerHTML = 'Start: ' + o_overpass_results[i].getAttribute('lat') + ',' + o_overpass_results[i].getAttribute('lon');
 }
 
 var t_nominatim_results;
@@ -75,7 +89,11 @@ function t_loadNominatimResults() {
 
                 var result = '';
                 for (i=0; i < t_nominatim_results.length; i++) {
-                    result = result + '<p><button onclick="t_loadOverpassResults(' + i + ')">Select</button> ' + t_nominatim_results[i].getAttribute('display_name') + '</p>';
+                    if (t_nominatim_results[i].getAttribute('osm_type') == 'node') {
+                        result = result + '<p><button onclick="t_loadOverpassResults(' + i + ')">Select</button> <acronym title="Will be used direct as route start/finish without searching entrances" style="border-bottom: 1px dashed black;color:#ff0000">node</acronym> ' + t_nominatim_results[i].getAttribute('display_name') + '</p>';
+                    } else {
+                        result = result + '<p><button onclick="t_loadOverpassResults(' + i + ')">Select</button> ' + t_nominatim_results[i].getAttribute('display_name') + '</p>';
+                    }
                 }
 
 //                alert(xmlhttp.responseText);
@@ -92,6 +110,11 @@ function t_loadNominatimResults() {
 function t_loadOverpassResults(i) {
     document.getElementById("t_nominatim_results").innerHTML = t_nominatim_results[i].getAttribute('display_name');
 //    alert(nominatim_results[i].getAttribute('osm_type') + '(' + nominatim_results[i].getAttribute('osm_id') + ')');
+
+    if (t_nominatim_results[i].getAttribute('osm_type') == 'node') {
+        setLatLonTwo(t_nominatim_results[i].getAttribute('lat'), t_nominatim_results[i].getAttribute('lon'));
+        document.getElementById("node_two").innerHTML = 'Finish: ' + t_nominatim_results[i].getAttribute('lat') + ',' + t_nominatim_results[i].getAttribute('lon');
+    } else {
 
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
@@ -119,15 +142,14 @@ function t_loadOverpassResults(i) {
     var request = 'http://overpass-api.de/api/interpreter?data=' + t_nominatim_results[i].getAttribute('osm_type') + '(' + t_nominatim_results[i].getAttribute('osm_id') + ');%20%3E%20-%3E%20.a;%20node.a[entrance];%20out%20body%20qt;';
     xmlhttp.open('GET', request, true);
     xmlhttp.send();
+    }
 }
 
-function t_setSelectedNode(number) {
-        setLatLonTwo(t_overpass_results[number].getAttribute('lat'), t_overpass_results[number].getAttribute('lon'));
-        document.getElementById("node_two").innerHTML = t_overpass_results[number].getAttribute('lat') + ',' + t_overpass_results[number].getAttribute('lon');
+function t_setSelectedNode(i) {
+    lat_t = t_overpass_results[i].getAttribute('lat');
+    lon_t = t_overpass_results[i].getAttribute('lon');
+    document.getElementById("node_two").innerHTML = 'Finish: ' + t_overpass_results[i].getAttribute('lat') + ',' + t_overpass_results[i].getAttribute('lon');
 }
-
-var lat_o, lon_o;
-var lat_t, lon_t;
 
 function setLatLonOne(la_o, lo_o) {
     lat_o = la_o;
@@ -143,6 +165,8 @@ function setLatLonTwo(la_t, lo_t) {
 
 function generateRoutes() {
     var result = '';
+
+    result = result + '<b>OpenStreetMap.org</b><br>';
     result = result + '<a href="http://www.openstreetmap.org/directions?engine=graphhopper_bicycle&route=' + lat_o + ',' + lon_o + ';' + lat_t + ',' + lon_t + '">Bicycle (GraphHopper)</a><br>';
     result = result + '<a href="http://www.openstreetmap.org/directions?engine=mapquest_bicycle&route=' + lat_o + ',' + lon_o + ';' + lat_t + ',' + lon_t + '">Bicycle (MapQuest)</a><br>';
     result = result + '<a href="http://www.openstreetmap.org/directions?engine=mapquest_car&route=' + lat_o + ',' + lon_o + ';' + lat_t + ',' + lon_t + '">Car (MapQuest)</a><br>';

@@ -5,11 +5,13 @@
 		<script type="text/javascript" src="functions.js"></script>
 	</head>
 	<body>
+		<p>Start</p>
 		<input id="o_place" type="text"></input>
 		<button type="button" onclick="o_loadNominatimResults()">Search</button>
 		<p id="o_nominatim_results"></p>
 		<p id="o_overpass_results"></p>
 		<hr>
+		<p>Finish</p>
 		<input id="t_place" type="text"></input>
 		<button type="button" onclick="t_loadNominatimResults()">Search</button>
 		<p id="t_nominatim_results"></p>
@@ -18,7 +20,6 @@
 		<p id="node_one"></p>
 		<p id="node_two"></p>
 		<button type="button" onclick="generateRoutes()">Generate routes</button>
-		<p><b>OpenStreetMap.org</b></p>
 		<p id="routes"></p>
 	</body>
 </html>
