@@ -37,36 +37,36 @@ function o_loadOverpassResults(i) {
 //    alert(nominatim_results[i].getAttribute('osm_type') + '(' + nominatim_results[i].getAttribute('osm_id') + ')');
 
     if (o_nominatim_results[i].getAttribute('osm_type') == 'node') {
-        setLatLonOne(o_nominatim_results[i].getAttribute('lat'), o_nominatim_results[i].getAttribute('lon'));
+        lat_o = o_nominatim_results[i].getAttribute('lat');
+        lon_o = o_nominatim_results[i].getAttribute('lon');
         document.getElementById("node_one").innerHTML = 'Start: ' + o_nominatim_results[i].getAttribute('lat') + ',' + o_nominatim_results[i].getAttribute('lon');
     } else {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4) {
+                if(xmlhttp.status == 200) {
+                    var response = xmlhttp.responseXML;
+                    o_overpass_results = response.getElementsByTagName('node');
 
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState == 4) {
-            if(xmlhttp.status == 200) {
-                var response = xmlhttp.responseXML;
-                o_overpass_results = response.getElementsByTagName('node');
+                    var result = '';
+                    for (i=0; i < o_overpass_results.length; i++) {
+                        result = result + '<p><button onclick="o_setSelectedNode(' + i + ')">Select</button> ';
 
-                var result = '';
-                for (i=0; i < o_overpass_results.length; i++) {
-                    result = result + '<p><button onclick="o_setSelectedNode(' + i + ')">Select</button> ';
-
-                    var tags = o_overpass_results[i].getElementsByTagName('tag');
-                    for (j=0; j < tags.length; j++) {
-                        result = result + tags[j].getAttribute('k') + ' = ' + tags[j].getAttribute('v') + '</br>';
+                        var tags = o_overpass_results[i].getElementsByTagName('tag');
+                        for (j=0; j < tags.length; j++) {
+                            result = result + tags[j].getAttribute('k') + ' = ' + tags[j].getAttribute('v') + '</br>';
+                        }
+                        result = result + '</p>';
                     }
-                    result = result + '</p>';
+//                alert(xmlhttp.responseText);
+                document.getElementById("o_overpass_results").innerHTML = result;
                 }
-//            alert(xmlhttp.responseText);
-            document.getElementById("o_overpass_results").innerHTML = result;
             }
-        }
-    };
+        };
 
-    var request = 'http://overpass-api.de/api/interpreter?data=' + o_nominatim_results[i].getAttribute('osm_type') + '(' + o_nominatim_results[i].getAttribute('osm_id') + ');%20%3E%20-%3E%20.a;%20node.a[entrance];%20out%20body%20qt;';
-    xmlhttp.open('GET', request, true);
-    xmlhttp.send();
+        var request = 'http://overpass-api.de/api/interpreter?data=' + o_nominatim_results[i].getAttribute('osm_type') + '(' + o_nominatim_results[i].getAttribute('osm_id') + ');%20%3E%20-%3E%20.a;%20node.a[entrance];%20out%20body%20qt;';
+        xmlhttp.open('GET', request, true);
+        xmlhttp.send();
     }
 }
 
@@ -112,36 +112,36 @@ function t_loadOverpassResults(i) {
 //    alert(nominatim_results[i].getAttribute('osm_type') + '(' + nominatim_results[i].getAttribute('osm_id') + ')');
 
     if (t_nominatim_results[i].getAttribute('osm_type') == 'node') {
-        setLatLonTwo(t_nominatim_results[i].getAttribute('lat'), t_nominatim_results[i].getAttribute('lon'));
+        lat_t = t_nominatim_results[i].getAttribute('lat');
+        lon_t = t_nominatim_results[i].getAttribute('lon');
         document.getElementById("node_two").innerHTML = 'Finish: ' + t_nominatim_results[i].getAttribute('lat') + ',' + t_nominatim_results[i].getAttribute('lon');
     } else {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4) {
+                if(xmlhttp.status == 200) {
+                    var response = xmlhttp.responseXML;
+                    t_overpass_results = response.getElementsByTagName('node');
 
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState == 4) {
-            if(xmlhttp.status == 200) {
-                var response = xmlhttp.responseXML;
-                t_overpass_results = response.getElementsByTagName('node');
+                    var result = '';
+                    for (i=0; i < t_overpass_results.length; i++) {
+                        result = result + '<p><button onclick="t_setSelectedNode(' + i + ')">Select</button> ';
 
-                var result = '';
-                for (i=0; i < t_overpass_results.length; i++) {
-                    result = result + '<p><button onclick="t_setSelectedNode(' + i + ')">Select</button> ';
-
-                    var tags = t_overpass_results[i].getElementsByTagName('tag');
-                    for (j=0; j < tags.length; j++) {
-                        result = result + tags[j].getAttribute('k') + ' = ' + tags[j].getAttribute('v') + '</br>';
+                        var tags = t_overpass_results[i].getElementsByTagName('tag');
+                        for (j=0; j < tags.length; j++) {
+                            result = result + tags[j].getAttribute('k') + ' = ' + tags[j].getAttribute('v') + '</br>';
+                        }
+                        result = result + '</p>';
                     }
-                    result = result + '</p>';
+//                alert(xmlhttp.responseText);
+                document.getElementById("t_overpass_results").innerHTML = result;
                 }
-//            alert(xmlhttp.responseText);
-            document.getElementById("t_overpass_results").innerHTML = result;
             }
-        }
-    };
+        };
 
-    var request = 'http://overpass-api.de/api/interpreter?data=' + t_nominatim_results[i].getAttribute('osm_type') + '(' + t_nominatim_results[i].getAttribute('osm_id') + ');%20%3E%20-%3E%20.a;%20node.a[entrance];%20out%20body%20qt;';
-    xmlhttp.open('GET', request, true);
-    xmlhttp.send();
+        var request = 'http://overpass-api.de/api/interpreter?data=' + t_nominatim_results[i].getAttribute('osm_type') + '(' + t_nominatim_results[i].getAttribute('osm_id') + ');%20%3E%20-%3E%20.a;%20node.a[entrance];%20out%20body%20qt;';
+        xmlhttp.open('GET', request, true);
+        xmlhttp.send();
     }
 }
 
@@ -149,18 +149,6 @@ function t_setSelectedNode(i) {
     lat_t = t_overpass_results[i].getAttribute('lat');
     lon_t = t_overpass_results[i].getAttribute('lon');
     document.getElementById("node_two").innerHTML = 'Finish: ' + t_overpass_results[i].getAttribute('lat') + ',' + t_overpass_results[i].getAttribute('lon');
-}
-
-function setLatLonOne(la_o, lo_o) {
-    lat_o = la_o;
-    lon_o = lo_o;
-//    alert(lat_o + lon_o);
-}
-
-function setLatLonTwo(la_t, lo_t) {
-    lat_t = la_t;
-    lon_t = lo_t;
-//    alert(lat_t + lon_t);
 }
 
 function generateRoutes() {
